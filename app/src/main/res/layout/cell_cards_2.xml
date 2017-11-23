@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="#DCDCDC	"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp">
+
+    <!-- Les CardView possèdent des attributs supplémentaires dont
+         - cardBackgroundColor
+         - cardElevation pour l'élévation (donc aussi l'ombre)
+         - cardCornerRadius pour arrondir les angles
+     -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- Les CardView agissent comme des FrameLayout,
+         pour avoir une organisation verticale nous devons
+         donc rajouter un LinearLayout -->
+
+        <ImageView
+            android:id="@+id/Cell_cards_img"
+            android:layout_width="95dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            tools:src="@drawable/ic_dashboard_black_24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1DFDF"
+                android:fontFamily="sans-serif"
+                android:gravity="top"
+                android:paddingLeft="20dp"
+                android:paddingTop="5dp"
+                android:textAlignment="viewStart"
+                android:textColor="#333"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Paris" />
+
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#E1DFDF"
+                android:ellipsize="end"
+                android:fontFamily="monospace"
+                android:lineSpacingExtra="8sp"
+                android:lines="2"
+                android:maxLines="2"
+                android:padding="20dp"
+                android:textColor="#333"
+                android:textSize="12sp"
+                tools:text="sss " />
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

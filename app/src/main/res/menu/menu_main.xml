@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.moad.myapplicationtest.MainActivity">
+    <item
+        android:id="@+id/search"
+        android:orderInCategory="100"
+        android:title="search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:color="@color/white"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/showGrid"
+        android:orderInCategory="100"
+        android:title="showgrid"
+        android:icon="@drawable/ic_list_black_24dp"
+        android:color="@color/white"
+        app:showAsAction="always" />
+
+
+</menu>
