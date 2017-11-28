@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by moad on 07/11/2017.
  */
-class DrawerListAdapter extends BaseAdapter {
+public class DrawerListAdapter extends BaseAdapter {
 
     Context mContext;
     ArrayList<NavItem> mNavItems;

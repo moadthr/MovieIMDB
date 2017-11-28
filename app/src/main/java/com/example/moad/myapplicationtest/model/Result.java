@@ -3,22 +3,64 @@ package com.example.moad.myapplicationtest.model;
 
 import java.io.Serializable;
 import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class Result implements Serializable {
+public class Result  implements Serializable{
 
+    @SerializedName("vote_count")
+    @Expose
     private Integer voteCount;
+    @SerializedName("id")
+    @Expose
     private Integer id;
+
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
+    }
+
+    @SerializedName("original_name")
+    @Expose
+    private String originalName;
+    @SerializedName("video")
+    @Expose
     private Boolean video;
+    @SerializedName("vote_average")
+    @Expose
     private Float voteAverage;
+    @SerializedName("title")
+    @Expose
     private String title;
+    @SerializedName("popularity")
+    @Expose
     private Float popularity;
-    private String poster_path;
+    @SerializedName("poster_path")
+    @Expose
+    private String posterPath;
+    @SerializedName("original_language")
+    @Expose
     private String originalLanguage;
+    @SerializedName("original_title")
+    @Expose
     private String originalTitle;
+    @SerializedName("genre_ids")
+    @Expose
     private List<Integer> genreIds = null;
+    @SerializedName("backdrop_path")
+    @Expose
     private String backdropPath;
+    @SerializedName("adult")
+    @Expose
     private Boolean adult;
+    @SerializedName("overview")
+    @Expose
     private String overview;
+    @SerializedName("release_date")
+    @Expose
     private String releaseDate;
 
     public Integer getVoteCount() {
@@ -70,11 +112,11 @@ public class Result implements Serializable {
     }
 
     public String getPosterPath() {
-        return poster_path;
+        return posterPath;
     }
 
     public void setPosterPath(String posterPath) {
-        this.poster_path = posterPath;
+        this.posterPath = posterPath;
     }
 
     public String getOriginalLanguage() {

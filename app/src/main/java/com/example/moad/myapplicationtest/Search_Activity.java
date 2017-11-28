@@ -1,53 +1,36 @@
 package com.example.moad.myapplicationtest;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Movie;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
-
-
-import com.example.moad.myapplicationtest.model.NavItem;
 import com.example.moad.myapplicationtest.model.Result;
-import com.example.moad.myapplicationtest.model.TopRated;
+import com.example.moad.myapplicationtest.model.SearchResult;
 import com.example.moad.myapplicationtest.model.TopRatedMovies;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
-
-public class MainActivity extends BaseDrawerActivity implements ListItemClickListener{
-
-
+public class Search_Activity extends BaseDrawerActivity implements ListItemClickListener {
+    Button btnsearch ;
     public static RecyclerView mNameList ;
     static int  showGrid    ;
     static int layoutcard ;
@@ -61,16 +44,36 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
     private MovieService movieService;
     static String language  ;
     SharedPreferences sharedPreferences;
-
-
-
+    static String query ;
+    SearchView searchView;
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.activity_search_, frameLayout);
+        searchView = (SearchView) findViewById(R.id.searchview);
+        btnsearch =  (Button) findViewById(R.id.btnsearch);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                callSearch(query);
+                return true;
+            }
 
-        getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
+                callSearch(newText);
+//              }
+                return true;
+            }
 
-        layoutcard = R.layout.cell_cards;
+            public void callSearch(String q) {
+                query=q;
+            }
+
+        });
+
+        layoutcard = R.layout.cell_cards_2;
         showGrid = 1 ;
         sharedPreferences = getBaseContext().getSharedPreferences("MyPref",MODE_PRIVATE);
         if (sharedPreferences.contains("lang")){
@@ -89,11 +92,9 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
         mNameList = (RecyclerView) findViewById(R.id.rv_names);
         progressBar = (ProgressBar) findViewById(R.id.main_progress);
-        changeAdapter(layoutcard);
+
         movieService = MovieApi.getClient().create(MovieService.class);	//1
-
     }
-
 
 
     @Override
@@ -114,39 +115,35 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
 
 
-    private Call<TopRatedMovies> callTopRatedMoviesApi() {	//2
-        return movieService.getTopRatedMovies(
+    private Call<SearchResult> callTopRatedMoviesApi() {	//2
+        return movieService.searchMovie(query,
                 getString(R.string.my_api_key),language,
                 currentPage
         );
     }
-    private List<Result> fetchResults(Response<TopRatedMovies> response) {	//3
-        TopRatedMovies topRatedMovies = response.body();
-        return topRatedMovies.getResults();
+    private List<Result> fetchResults(Response<SearchResult> response) {	//3
+        SearchResult searchresult = response.body();
+        return searchresult.getResults();
     }
 
-    public RecyclerView getmNameList() {
-        return mNameList;
-    }
+
 
     public void changeAdapter (int layout ){
 
-       LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-       mNameList.setLayoutManager(layoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mNameList.setLayoutManager(layoutManager);
         if(layout == R.layout.cell_cards_3){
             mNameList.setLayoutManager(new GridLayoutManager(this, 3));
         }
-       // recyclerViewAdapter = new RecyclerViewAdapter(MainActivity.this,reponse.getResults().size(),reponse.getResults(),layout);
-       // mNameList.setAdapter(recyclerViewAdapter);
-        //mNameList.setHasFixedSize(true);
-         adapterPagination = new PaginationAdapter(MainActivity.this,this,layout);
+
+        adapterPagination = new PaginationAdapter(Search_Activity.this,this,layout);
         mNameList.setItemAnimator(new DefaultItemAnimator());
         mNameList.setAdapter(adapterPagination);
         mNameList.setHasFixedSize(true);
 
 
 
-          mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+        mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
@@ -193,9 +190,9 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
     private void loadFirstPage() {
 
-        callTopRatedMoviesApi().enqueue(new Callback<TopRatedMovies>() {
+        callTopRatedMoviesApi().enqueue(new Callback<SearchResult>() {
             @Override
-            public void onResponse(Call<TopRatedMovies> call, Response<TopRatedMovies> response) {
+            public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 // Got data. Send it to adapter
 
                 List<Result> results = fetchResults(response);
@@ -207,8 +204,8 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             }
 
             @Override
-            public void onFailure(Call<TopRatedMovies> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<SearchResult> call, Throwable t) {
+                Toast.makeText(Search_Activity.this, "error", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -217,9 +214,9 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
     private void loadNextPage() {
 
-        callTopRatedMoviesApi().enqueue(new Callback<TopRatedMovies>() {
+        callTopRatedMoviesApi().enqueue(new Callback<SearchResult>() {
             @Override
-            public void onResponse(Call<TopRatedMovies> call, Response<TopRatedMovies> response) {
+            public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 adapterPagination.removeLoadingFooter();
                 isLoading = false;
 
@@ -231,13 +228,13 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             }
 
             @Override
-            public void onFailure(Call<TopRatedMovies> call, Throwable t) {
+            public void onFailure(Call<SearchResult> call, Throwable t) {
                 t.printStackTrace();
                 // TODO: 08/11/16 handle failure
             }
         });
     }
-        @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -256,7 +253,7 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             }
             else if(showGrid%3 == 1){
                 layoutcard = R.layout.cell_cards_2;
-               changeAdapter(layoutcard);
+                changeAdapter(layoutcard);
                 showGrid++;
                 return true;
             }
@@ -287,6 +284,15 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
     }
 
+    public void lookfor (View view){
+        Log.d("btn pressed",query);
+        changeAdapter(layoutcard);
 
 
+    }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(Search_Activity.this, MainActivity.class));
+        finish();
+    }
 }
