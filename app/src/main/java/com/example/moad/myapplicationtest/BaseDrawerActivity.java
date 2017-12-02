@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -39,6 +40,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
         mNavItems.add(new NavItem("TvShows", "series", R.drawable.ic_live_tv_black_24dp));
         mNavItems.add(new NavItem("Setting", "change your preferences", R.drawable.ic_settings_black_24dp));
         mNavItems.add(new NavItem("Search", "Look for a movie", R.drawable.ic_search_black_24dp));
+        mNavItems.add(new NavItem("Favoris", "check your favorites ", R.drawable.ic_favorite_black_24dp));
         mNavItems.add(new NavItem("About", "Know more about us", R.drawable.ic_info_black_24dp));
 
         // DrawerLayout
@@ -90,6 +92,12 @@ public class BaseDrawerActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+        if( mNavItems.get(position).getmTitle().equals("Favoris")){
+            Intent intent = new Intent(this,Favoris_Activity.class);
+            intent.putExtra("activity","favoris");
+            startActivity(intent);
+            finish();
+        }
 
         // Close the drawer
         mDrawerLayout.closeDrawer(mDrawerPane);
@@ -102,4 +110,24 @@ public class BaseDrawerActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+
+
+        if (id == R.id.showGrid ) {
+
+            }
+
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

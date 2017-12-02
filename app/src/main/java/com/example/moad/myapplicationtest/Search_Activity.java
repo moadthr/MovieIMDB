@@ -245,24 +245,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
 
         int test = showGrid ;
         if (id == R.id.showGrid ) {
-            if(showGrid%3 == 0) {
-                layoutcard = R.layout.cell_cards;
-                changeAdapter(layoutcard);
-                showGrid++;
-                return true;
-            }
-            else if(showGrid%3 == 1){
-                layoutcard = R.layout.cell_cards_2;
-                changeAdapter(layoutcard);
-                showGrid++;
-                return true;
-            }
-            else if(showGrid%3 == 2) {
-                layoutcard = R.layout.cell_cards_3;
-                changeAdapter(layoutcard);
-                showGrid++;
-                return true;
-            }
+
 
         }
 

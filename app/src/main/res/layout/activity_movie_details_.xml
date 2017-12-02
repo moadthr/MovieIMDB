@@ -23,6 +23,13 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <ImageView
+        android:id="@+id/imgFavoris"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="150dp"
+       />
+
     <TextView
         android:id="@+id/DescriptionMovie"
         android:layout_width="match_parent"

@@ -25,7 +25,8 @@
         <activity android:name=".SettingActivity" />
         <activity android:name=".BaseDrawerActivity" />
         <activity android:name=".TVShowsActivity" />
-        <activity android:name=".Search_Activity"></activity>
+        <activity android:name=".Search_Activity" />
+        <activity android:name=".Favoris_Activity"></activity>
     </application>
 
 </manifest>
