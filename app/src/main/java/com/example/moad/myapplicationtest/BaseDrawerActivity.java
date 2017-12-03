@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -27,6 +28,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
     RelativeLayout mDrawerPane;
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
     FrameLayout frameLayout;
+    DrawerListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +38,12 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
 
-        mNavItems.add(new NavItem("Home", "Movies", R.drawable.ic_home_black_24dp));
-        mNavItems.add(new NavItem("TvShows", "series", R.drawable.ic_live_tv_black_24dp));
-        mNavItems.add(new NavItem("Setting", "change your preferences", R.drawable.ic_settings_black_24dp));
-        mNavItems.add(new NavItem("Search", "Look for a movie", R.drawable.ic_search_black_24dp));
-        mNavItems.add(new NavItem("Favoris", "check your favorites ", R.drawable.ic_favorite_black_24dp));
-        mNavItems.add(new NavItem("About", "Know more about us", R.drawable.ic_info_black_24dp));
+        mNavItems.add(new NavItem(R.string.Home, R.string.HomeDetails, R.drawable.ic_home_black_24dp));
+        mNavItems.add(new NavItem(R.string.TvShows , R.string.TvShowsDetails, R.drawable.ic_live_tv_black_24dp));
+        mNavItems.add(new NavItem(R.string.Setting , R.string.SettingDetails, R.drawable.ic_settings_black_24dp));
+        mNavItems.add(new NavItem(R.string.Search ,R.string.SearchDetails, R.drawable.ic_search_black_24dp));
+        mNavItems.add(new NavItem(R.string.Favoris , R.string.FavorisDetails, R.drawable.ic_favorite_black_24dp));
+        mNavItems.add(new NavItem(R.string.About, R.string.AboutDetails, R.drawable.ic_info_black_24dp));
 
         // DrawerLayout
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -49,11 +51,9 @@ public class BaseDrawerActivity extends AppCompatActivity {
         // Populate the Navigtion Drawer with options
         mDrawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
         mDrawerList = (ListView) findViewById(R.id.navList);
-
-
-        DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
-
+        adapter = new DrawerListAdapter(this, mNavItems);
         mDrawerList.setAdapter(adapter);
+
 
 
         // Drawer Item click listeners
@@ -66,35 +66,41 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
     }
 
+    public void load(){
+        adapter = new DrawerListAdapter(this, mNavItems);
+        mDrawerList.setAdapter(adapter);
+
+    }
+
     private void selectItemFromDrawer(int position) {
 
-        if( mNavItems.get(position).getmTitle().equals("Setting")){
+        if( mNavItems.get(position).getmTitle()== R.string.Setting){
             Intent intent = new Intent(this,SettingActivity.class);
             intent.putExtra("activity","Setting");
             startActivity(intent);
-            finish();
+
+
         }
-        if( mNavItems.get(position).getmTitle().equals("Home")){
+        if(  mNavItems.get(position).getmTitle()== R.string.Home){
             Intent intent = new Intent(this,MainActivity.class);
-            intent.putExtra("activity","MovieDetails_activity");
             startActivity(intent);
             finish();
+
+
         }
-        if( mNavItems.get(position).getmTitle().equals("TvShows")){
+        if(  mNavItems.get(position).getmTitle()== R.string.TvShows){
             Intent intent = new Intent(this,TVShowsActivity.class);
-            intent.putExtra("activity","TvShowsActivity");
             startActivity(intent);
             finish();
+
         }
-        if( mNavItems.get(position).getmTitle().equals("Search")){
+        if(  mNavItems.get(position).getmTitle()== R.string.Search){
             Intent intent = new Intent(this,Search_Activity.class);
-            intent.putExtra("activity","Search_Activity");
             startActivity(intent);
             finish();
         }
-        if( mNavItems.get(position).getmTitle().equals("Favoris")){
+        if(  mNavItems.get(position).getmTitle()== R.string.Favoris){
             Intent intent = new Intent(this,Favoris_Activity.class);
-            intent.putExtra("activity","favoris");
             startActivity(intent);
             finish();
         }
@@ -102,13 +108,13 @@ public class BaseDrawerActivity extends AppCompatActivity {
         // Close the drawer
         mDrawerLayout.closeDrawer(mDrawerPane);
     }
+
+
     @Override
-    public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    protected void onResume() {
+        super.onResume();
+        load();
+
     }
 
     @Override
@@ -130,4 +136,12 @@ public class BaseDrawerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if (mDrawerLayout.isDrawerOpen(Gravity.START))
+            mDrawerLayout.closeDrawer(Gravity.START);
+        else
+            super.onBackPressed();
+    }
 }

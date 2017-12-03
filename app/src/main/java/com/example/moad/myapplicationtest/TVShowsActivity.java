@@ -37,7 +37,7 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int TOTAL_PAGES = 5;
+    private int TOTAL_PAGES = 15;
     private int currentPage = PAGE_START;
     private MovieService movieService;
     static String language  ;
@@ -46,10 +46,19 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.TvShows);
         getLayoutInflater().inflate(R.layout.activity_tvshows, frameLayout);
 
         layoutcard = R.layout.cell_cards;
         showGrid = 1 ;
+        load();
+
+        mNameList = (RecyclerView) findViewById(R.id.rv_names);
+        progressBar = (ProgressBar) findViewById(R.id.main_progress);
+        movieService = MovieApi.getClient().create(MovieService.class);	//1
+    }
+
+    public void load (){
         sharedPreferences = getBaseContext().getSharedPreferences("MyPref",MODE_PRIVATE);
         if (sharedPreferences.contains("lang")){
             language = sharedPreferences.getString("lang",null);
@@ -63,15 +72,14 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         }
 
 
-        mNameList = (RecyclerView) findViewById(R.id.rv_names);
-        progressBar = (ProgressBar) findViewById(R.id.main_progress);
-        changeAdapter(layoutcard);
-        movieService = MovieApi.getClient().create(MovieService.class);	//1
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-
+        load();
+        changeAdapter(layoutcard);
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -251,10 +259,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
 
 
     }
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(TVShowsActivity.this, MainActivity.class));
-        finish();
-    }
+
 
 }

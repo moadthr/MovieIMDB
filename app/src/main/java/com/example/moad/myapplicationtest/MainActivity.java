@@ -56,10 +56,11 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int TOTAL_PAGES = 5;
+    private int TOTAL_PAGES = 15;
     private int currentPage = PAGE_START;
     private MovieService movieService;
     static String language  ;
+    LinearLayoutManager layoutManager;
     SharedPreferences sharedPreferences;
 
 
@@ -67,14 +68,29 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTitle(R.string.Home);
         getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
-
         layoutcard = R.layout.cell_cards;
         showGrid = 1 ;
+        load();
+        mNameList = (RecyclerView) findViewById(R.id.rv_names);
+        progressBar = (ProgressBar) findViewById(R.id.main_progress);
+        layoutManager = new LinearLayoutManager(this);
+        mNameList.setLayoutManager(layoutManager);
+
+
+        movieService = MovieApi.getClient().create(MovieService.class);	//1
+
+    }
+    public void load (){
+
         sharedPreferences = getBaseContext().getSharedPreferences("MyPref",MODE_PRIVATE);
         if (sharedPreferences.contains("lang")){
             language = sharedPreferences.getString("lang",null);
+            if(language.equals("en-EN"))
+                SettingActivity.setLocale("en",this);
+            else
+                SettingActivity.setLocale("fr",this);
         }
         else{
             sharedPreferences
@@ -84,24 +100,17 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             language = sharedPreferences.getString("lang",null);
         }
 
-        Log.d("langgggggggggg",language);
-
-
-        mNameList = (RecyclerView) findViewById(R.id.rv_names);
-        progressBar = (ProgressBar) findViewById(R.id.main_progress);
-        changeAdapter(layoutcard);
-        movieService = MovieApi.getClient().create(MovieService.class);	//1
-
     }
-
-
 
     @Override
     protected void onResume() {
         super.onResume();
+        load();
+        int a= currentPage ;
+        boolean b=isLoading;
+        changeAdapter(layoutcard);
+        adapter.notifyDataSetChanged();
 
-        // to check current activity in the navigation drawer
-//        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
 
@@ -129,20 +138,18 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         return mNameList;
     }
 
+
     public void changeAdapter (int layout ){
 
-       LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-       mNameList.setLayoutManager(layoutManager);
+
         if(layout == R.layout.cell_cards_3){
             mNameList.setLayoutManager(new GridLayoutManager(this, 3));
         }
-       // recyclerViewAdapter = new RecyclerViewAdapter(MainActivity.this,reponse.getResults().size(),reponse.getResults(),layout);
-       // mNameList.setAdapter(recyclerViewAdapter);
-        //mNameList.setHasFixedSize(true);
+
          adapterPagination = new PaginationAdapter(MainActivity.this,this,layout);
-        mNameList.setItemAnimator(new DefaultItemAnimator());
-        mNameList.setAdapter(adapterPagination);
-        mNameList.setHasFixedSize(true);
+         mNameList.setItemAnimator(new DefaultItemAnimator());
+         mNameList.setAdapter(adapterPagination);
+         mNameList.setHasFixedSize(true);
 
 
 
@@ -177,17 +184,13 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             }
         });
 
-
         // mocking network delay for API call
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                loadFirstPage();
+                     loadFirstPage();
             }
         }, 1000);
-
-
-
 
     }
 
@@ -198,14 +201,23 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             public void onResponse(Call<TopRatedMovies> call, Response<TopRatedMovies> response) {
                 // Got data. Send it to adapter
 
-                List<Result> results = fetchResults(response);
-                progressBar.setVisibility(View.GONE);
-                adapterPagination.addAll(results);
+                if (currentPage == TOTAL_PAGES) {
+                    List<Result> results = fetchResults(response);
+                    adapterPagination.addAll(results);
+                    isLastPage = true;
+                }
+                else {
+                    List<Result> results = fetchResults(response);
+                    progressBar.setVisibility(View.GONE);
+                    adapterPagination.addAll(results);
 
-                if (currentPage <= TOTAL_PAGES) adapterPagination.addLoadingFooter();
-                else isLastPage = true;
+                    if (currentPage <= TOTAL_PAGES)
+                        adapterPagination.addLoadingFooter();
+                    else {
+                        isLastPage = true;
+                    }
+                }
             }
-
             @Override
             public void onFailure(Call<TopRatedMovies> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
@@ -283,7 +295,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         intent.putExtra("BUNDLE",args);
         //intent.putStringArrayListExtra(EXTRA_CARS,cars);
         startActivity(intent);
-
 
     }
 

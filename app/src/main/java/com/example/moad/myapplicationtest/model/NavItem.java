@@ -5,15 +5,15 @@ package com.example.moad.myapplicationtest.model;
  */
 
 public class NavItem {
-    String mTitle;
-    String mSubtitle;
+    int mTitle;
+    int  mSubtitle;
     int mIcon;
 
-    public String getmTitle() {
+    public int getmTitle() {
         return mTitle;
     }
 
-    public String getmSubtitle() {
+    public int getmSubtitle() {
         return mSubtitle;
     }
 
@@ -21,7 +21,7 @@ public class NavItem {
         return mIcon;
     }
 
-    public NavItem(String title, String subtitle, int icon) {
+    public NavItem(int title, int subtitle, int icon) {
         mTitle = title;
         mSubtitle = subtitle;
         mIcon = icon;

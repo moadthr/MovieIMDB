@@ -23,7 +23,8 @@
         </activity>
         <activity android:name=".MovieDetails_Activity" />
         <activity android:name=".SettingActivity" />
-        <activity android:name=".BaseDrawerActivity" />
+        <activity android:name=".BaseDrawerActivity"
+            android:configChanges="locale|orientation"/>
         <activity android:name=".TVShowsActivity" />
         <activity android:name=".Search_Activity" />
         <activity android:name=".Favoris_Activity"></activity>

@@ -40,24 +40,23 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int TOTAL_PAGES = 1;
+    private int TOTAL_PAGES = 5;
     private int currentPage = PAGE_START;
     public static RecyclerView mNameList ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.Favoris);
         getLayoutInflater().inflate(R.layout.activity_favoris_, frameLayout);
-
-        load();
-
         layoutcard = R.layout.cell_cards_2;
         mNameList = (RecyclerView) findViewById(R.id.rv_names);
         progressBar = (ProgressBar) findViewById(R.id.main_progress);
-        changeAdapter(layoutcard);
+        load();
+
     }
 
-    void load (){
+    public void load (){
 
         Gson gson = new Gson();
         Type type = new TypeToken<List<Result>>(){}.getType();
@@ -76,6 +75,8 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
     protected void onResume() {
         super.onResume();
         load();
+        changeAdapter(layoutcard);
+        adapter.notifyDataSetChanged();
     }
 
 

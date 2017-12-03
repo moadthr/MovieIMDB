@@ -1,16 +1,22 @@
 package com.example.moad.myapplicationtest;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import java.util.Locale;
 
 public class SettingActivity extends BaseDrawerActivity {
     Spinner spinnerLanguages ;
@@ -19,9 +25,12 @@ public class SettingActivity extends BaseDrawerActivity {
     SharedPreferences sharedPreferences;
     String language ;
     String activity ;
+    public Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.Setting);
+        context= this;
         getLayoutInflater().inflate(R.layout.activity_setting, frameLayout);
         initialDisplay = true ;
         spinnerLanguages = (Spinner) findViewById(R.id.language);
@@ -37,11 +46,14 @@ public class SettingActivity extends BaseDrawerActivity {
         sharedPreferences = getBaseContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         language = sharedPreferences.getString("lang",null);
 
-        if(language.equals("en-EN"))
+        if(language.equals("en-EN")) {
+            setLocale("en",SettingActivity.this);
             spinnerLanguages.setSelection(0);
-        if(language.equals("fr-FR"))
+        }
+        if(language.equals("fr-FR")) {
+            setLocale("fr",SettingActivity.this);
             spinnerLanguages.setSelection(1);
-
+        }
         Intent intent = new Intent();
 
         activity = intent.getStringExtra("activity");
@@ -54,25 +66,30 @@ public class SettingActivity extends BaseDrawerActivity {
                 String language = spinnerLanguages.getSelectedItem().toString();
 
                 if (!initialDisplay) {
-                    Log.d("********************", language);
+
                     if (language.equals("English")) {
                         sharedPreferences
                                 .edit()
                                 .putString("lang", "en-EN")
                                 .apply();
-                        startActivity(new Intent(SettingActivity.this, SettingActivity.class));
+                        setLocale("en",SettingActivity.this);
                         finish();
+                        startActivity(new Intent(SettingActivity.this, SettingActivity.class));
+
                     }
                     if (language.equals("French")) {
                         sharedPreferences
                                 .edit()
                                 .putString("lang", "fr-FR")
                                 .apply();
-                        startActivity( new Intent(SettingActivity.this, SettingActivity.class));
+                        setLocale("fr",SettingActivity.this);
                         finish();
+                        startActivity( new Intent(SettingActivity.this, SettingActivity.class));
+
+
                     }
 
-                    finish();
+
                 }
                 initialDisplay = false;
 
@@ -85,11 +102,14 @@ public class SettingActivity extends BaseDrawerActivity {
         });
 
     }
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(SettingActivity.this, MainActivity.class));
-        finish();
-    }
 
+    public static  void setLocale(String lang, Context contextt) {
+        Locale myLocale = new Locale(lang);
+        Resources res = contextt.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+    }
 
 }

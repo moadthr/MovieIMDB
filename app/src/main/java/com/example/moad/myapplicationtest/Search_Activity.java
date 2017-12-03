@@ -39,17 +39,20 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int TOTAL_PAGES = 5;
+    private int TOTAL_PAGES = 15;
     private int currentPage = PAGE_START;
     private MovieService movieService;
     static String language  ;
     SharedPreferences sharedPreferences;
     static String query ;
     SearchView searchView;
+    boolean isInitialise = false ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.Search);
         getLayoutInflater().inflate(R.layout.activity_search_, frameLayout);
+
         searchView = (SearchView) findViewById(R.id.searchview);
         btnsearch =  (Button) findViewById(R.id.btnsearch);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -75,6 +78,17 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
 
         layoutcard = R.layout.cell_cards_2;
         showGrid = 1 ;
+        load();
+
+        mNameList = (RecyclerView) findViewById(R.id.rv_names);
+        progressBar = (ProgressBar) findViewById(R.id.main_progress);
+
+
+
+        movieService = MovieApi.getClient().create(MovieService.class);	//1
+    }
+    public  void load(){
+
         sharedPreferences = getBaseContext().getSharedPreferences("MyPref",MODE_PRIVATE);
         if (sharedPreferences.contains("lang")){
             language = sharedPreferences.getString("lang",null);
@@ -86,23 +100,17 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
                     .apply();
             language = sharedPreferences.getString("lang",null);
         }
-
-        Log.d("langgggggggggg",language);
-
-
-        mNameList = (RecyclerView) findViewById(R.id.rv_names);
-        progressBar = (ProgressBar) findViewById(R.id.main_progress);
-
-        movieService = MovieApi.getClient().create(MovieService.class);	//1
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
+        load();
+        if(isInitialise) {
+            changeAdapter(layoutcard);
+        }
+        adapter.notifyDataSetChanged();
 
-        // to check current activity in the navigation drawer
-//        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
 
@@ -140,10 +148,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         mNameList.setItemAnimator(new DefaultItemAnimator());
         mNameList.setAdapter(adapterPagination);
         mNameList.setHasFixedSize(true);
-
-
-
-        mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+        mNameList.addOnScrollListener(new PaginationScrollListener( layoutManager) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
@@ -174,19 +179,19 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
             }
         });
 
-
         // mocking network delay for API call
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadFirstPage();
-            }
-        }, 1000);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadFirstPage();
+                }
+            }, 1000);
+
+        }
 
 
 
-
-    }
 
     private void loadFirstPage() {
 
@@ -194,15 +199,19 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 // Got data. Send it to adapter
+                if (currentPage == TOTAL_PAGES) {
+                    List<Result> results = fetchResults(response);
+                    adapterPagination.addAll(results);
+                    isLastPage = true;
+                } else {
+                    List<Result> results = fetchResults(response);
+                    progressBar.setVisibility(View.GONE);
+                    adapterPagination.addAll(results);
 
-                List<Result> results = fetchResults(response);
-                progressBar.setVisibility(View.GONE);
-                adapterPagination.addAll(results);
-
-                if (currentPage <= TOTAL_PAGES) adapterPagination.addLoadingFooter();
-                else isLastPage = true;
+                    if (currentPage <= TOTAL_PAGES) adapterPagination.addLoadingFooter();
+                    else isLastPage = true;
+                }
             }
-
             @Override
             public void onFailure(Call<SearchResult> call, Throwable t) {
                 Toast.makeText(Search_Activity.this, "error", Toast.LENGTH_SHORT).show();
@@ -220,12 +229,13 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
                 adapterPagination.removeLoadingFooter();
                 isLoading = false;
 
-                List<Result> results = fetchResults(response);
-                adapterPagination.addAll(results);
 
-                if (currentPage != TOTAL_PAGES) adapterPagination.addLoadingFooter();
-                else isLastPage = true;
-            }
+                    List<Result> results = fetchResults(response);
+                    adapterPagination.addAll(results);
+
+                    if (currentPage != TOTAL_PAGES) adapterPagination.addLoadingFooter();
+                    else isLastPage = true;
+                }
 
             @Override
             public void onFailure(Call<SearchResult> call, Throwable t) {
@@ -268,14 +278,13 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
     }
 
     public void lookfor (View view){
-        Log.d("btn pressed",query);
+         isLoading = false;
+         isLastPage = false;
+         currentPage = 1;
+        isInitialise = true ;
+        if(query != null && !query.equals(""))
         changeAdapter(layoutcard);
 
+    }
 
-    }
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(Search_Activity.this, MainActivity.class));
-        finish();
-    }
 }

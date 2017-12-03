@@ -16,6 +16,10 @@ import android.widget.Toast;
 
 import com.example.moad.myapplicationtest.model.NavItem;
 import com.example.moad.myapplicationtest.model.Result;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -27,7 +31,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class MovieDetails_Activity extends BaseDrawerActivity {
+public class MovieDetails_Activity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener  {
+
+    private static final int RECOVERY_REQUEST = 1;
+    private YouTubePlayerView youTubeView;
+
     TextView titleMovie ;
     ImageView imageView;
     TextView DescriptionMovie ;
@@ -38,11 +46,13 @@ public class MovieDetails_Activity extends BaseDrawerActivity {
     Result result ;
     boolean AddOrRemove ;
     boolean existe  ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-       getLayoutInflater().inflate(R.layout.activity_movie_details_, frameLayout);
+        setTitle("Details");
+        setContentView(R.layout.activity_movie_details_);
+//       getLayoutInflater().inflate(R.layout.activity_movie_details_, frameLayout);
         sharedPreferences   = getBaseContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         titleMovie =  (TextView) findViewById(R.id.titleMovie);
         DescriptionMovie =  (TextView) findViewById(R.id.DescriptionMovie);
@@ -124,11 +134,27 @@ public class MovieDetails_Activity extends BaseDrawerActivity {
                         .edit()
                         .putString("favoris", json)
                         .apply();
-
-
             }
         });
+
+        youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+        youTubeView.initialize(getString(R.string.YoutubeApi), this);
     }
 
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+        if (!wasRestored) {
+            player.cueVideo("fhWaJi1Hsfo"); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+        }
+    }
 
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
+        if (errorReason.isUserRecoverableError()) {
+            errorReason.getErrorDialog(this, RECOVERY_REQUEST).show();
+        } else {
+            String error = String.format(getString(R.string.player_error), errorReason.toString());
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        }
+    }
 }

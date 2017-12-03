@@ -10,14 +10,13 @@
     <ImageView
         android:id="@+id/imgMovie"
         android:layout_width="match_parent"
-        android:layout_height="234dp"
-        android:scaleType="fitXY"
-        />
+        android:layout_height="200dp"
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/titleMovie"
         android:layout_width="174dp"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:paddingTop="8dp"
         android:text="TextView"
         android:textSize="18sp"
@@ -25,16 +24,20 @@
 
     <ImageView
         android:id="@+id/imgFavoris"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="150dp"
-       />
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="150dp" />
 
     <TextView
         android:id="@+id/DescriptionMovie"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
         android:paddingTop="10dp"
         android:text="TextView" />
+
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/youtube_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
