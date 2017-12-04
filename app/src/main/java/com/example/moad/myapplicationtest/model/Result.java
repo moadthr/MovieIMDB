@@ -59,9 +59,20 @@ public class Result  implements Serializable{
     @SerializedName("overview")
     @Expose
     private String overview;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+
+    private String type ;
 
     public Integer getVoteCount() {
         return voteCount;

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,22 +29,39 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/imgFavoris"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="150dp" />
+    <LinearLayout
+        android:layout_width="160dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="210dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgFavoris"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imageshare"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:src="@drawable/ic_share_black_24dp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/DescriptionMovie"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:paddingTop="10dp"
         android:text="TextView" />
 
-    <com.google.android.youtube.player.YouTubePlayerView
-        android:id="@+id/youtube_view"
+    <fragment
+        android:id="@+id/youtube_fragment"
+        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="250dp" />
 
 </LinearLayout>
+</ScrollView>

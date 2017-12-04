@@ -247,12 +247,13 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
 
 
     @Override
-    public void onListItemClick(Result movie) {
+    public void onListItemClick(Result tvshow) {
         Intent intent = new Intent(this,MovieDetails_Activity.class);
         // intent.putExtra("list", list);
 
         Bundle args = new Bundle();
-        args.putSerializable("result",(Serializable)movie);
+        tvshow.setType("tvshow");
+        args.putSerializable("result",(Serializable)tvshow);
         intent.putExtra("BUNDLE",args);
         //intent.putStringArrayListExtra(EXTRA_CARS,cars);
         startActivity(intent);

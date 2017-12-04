@@ -23,6 +23,8 @@
         <item name="android:textColor">@color/white</item>
         <item name="colorControlNormal">@color/white</item>
     </style>
-
+    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:icon">@drawable/ic_view_headline_black_24dp</item>
+    </style>
 
 </resources>

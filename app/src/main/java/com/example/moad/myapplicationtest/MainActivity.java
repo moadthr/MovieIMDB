@@ -291,6 +291,7 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         // intent.putExtra("list", list);
 
         Bundle args = new Bundle();
+        result.setType("movie");
         args.putSerializable("result",(Serializable)result);
         intent.putExtra("BUNDLE",args);
         //intent.putStringArrayListExtra(EXTRA_CARS,cars);

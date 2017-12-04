@@ -3,6 +3,7 @@ package com.example.moad.myapplicationtest;
 import android.content.Intent;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.moad.myapplicationtest.model.NavItem;
 
@@ -29,12 +31,19 @@ public class BaseDrawerActivity extends AppCompatActivity {
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
     FrameLayout frameLayout;
     DrawerListAdapter adapter;
+    boolean openedDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_base_drawer);
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setLogo(R.drawable.ic_view_headline_black_24dp);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_view_headline_black_24dp);
+        openedDrawer = true;
 
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
 
@@ -74,6 +83,7 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
     private void selectItemFromDrawer(int position) {
 
+
         if( mNavItems.get(position).getmTitle()== R.string.Setting){
             Intent intent = new Intent(this,SettingActivity.class);
             intent.putExtra("activity","Setting");
@@ -104,6 +114,11 @@ public class BaseDrawerActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+        if(  mNavItems.get(position).getmTitle()== R.string.About){
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Close the drawer
         mDrawerLayout.closeDrawer(mDrawerPane);
@@ -124,11 +139,13 @@ public class BaseDrawerActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
 
-
-        if (id == R.id.showGrid ) {
-
+        if (id == android.R.id.home ) {
+            if(openedDrawer)
+                mDrawerLayout.openDrawer(mDrawerPane);
+            else
+                mDrawerLayout.closeDrawer(mDrawerPane);
+            openedDrawer = !openedDrawer;
             }
 
 
