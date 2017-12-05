@@ -67,7 +67,6 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
         else{
             favoisList= new ArrayList<Result>();
         }
-
     }
 
     @Override
@@ -78,15 +77,12 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
         adapter.notifyDataSetChanged();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
 
     public void changeAdapter (int layout ){
 
@@ -98,7 +94,6 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
         mNameList.setAdapter(adapterPagination);
         mNameList.setHasFixedSize(true);
 
-
         // mocking network delay for API call
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -107,59 +102,36 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
             }
         }, 1000);
 
-
-
-
     }
 
     private void loadFirstPage() {
-
                 List<Result> results = favoisList;
                 adapterPagination.addAll(results);
                  isLastPage = true;
-
-
     }
-
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
-
         if (id == R.id.showGrid ) {
-
-
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onListItemClick(Result result) {
         Intent intent = new Intent(this,MovieDetails_Activity.class);
-        // intent.putExtra("list", list);
-
         Bundle args = new Bundle();
         args.putSerializable("result",(Serializable)result);
         intent.putExtra("BUNDLE",args);
-        //intent.putStringArrayListExtra(EXTRA_CARS,cars);
         startActivity(intent);
-
-
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
+        finish();
     }
 
 }

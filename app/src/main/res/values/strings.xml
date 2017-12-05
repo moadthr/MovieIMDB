@@ -4,6 +4,7 @@
     <string name="my_api_key">decda6c2ca8bc2eeed5a798325c34638</string>
     <string name="YoutubeApi">AIzaSyCtIHSPmKnRjQ9nzUTlZfsbY339I6ivcPE</string>
     <string name="languageDef">English</string>
+    <string name="lang">Language</string>
     <string name="Home">Home</string>
     <string name="Details">Details</string>
     <string name="TvShows">TvShows</string>

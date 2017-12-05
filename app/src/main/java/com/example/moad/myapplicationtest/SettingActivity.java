@@ -1,16 +1,15 @@
 package com.example.moad.myapplicationtest;
 
 import android.content.Context;
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,43 +18,37 @@ import android.widget.Spinner;
 import java.util.Locale;
 
 public class SettingActivity extends BaseDrawerActivity {
-    Spinner spinnerLanguages ;
-    Spinner spinnerSizeImg ;
-    static boolean initialDisplay = true ;
+    Spinner spinnerLanguages;
+    static boolean initialDisplay = true;
     SharedPreferences sharedPreferences;
-    String language ;
-    String activity ;
+    String language;
+
     public Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.Setting);
-        context= this;
+        context = this;
         getLayoutInflater().inflate(R.layout.activity_setting, frameLayout);
-        initialDisplay = true ;
+        initialDisplay = true;
         spinnerLanguages = (Spinner) findViewById(R.id.language);
-
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinnerLanguages.setAdapter(adapter);
-     
-        sharedPreferences = getBaseContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        language = sharedPreferences.getString("lang",null);
 
-        if(language.equals("en-EN")) {
-            setLocale("en",SettingActivity.this);
+        sharedPreferences = getBaseContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        language = sharedPreferences.getString("lang", null);
+
+        if (language.equals("en-EN")) {
+            setLocale("en", SettingActivity.this);
             spinnerLanguages.setSelection(0);
         }
-        if(language.equals("fr-FR")) {
-            setLocale("fr",SettingActivity.this);
+        if (language.equals("fr-FR")) {
+            setLocale("fr", SettingActivity.this);
             spinnerLanguages.setSelection(1);
         }
-        Intent intent = new Intent();
-
-        activity = intent.getStringExtra("activity");
-
         spinnerLanguages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -65,32 +58,27 @@ public class SettingActivity extends BaseDrawerActivity {
 
                 if (!initialDisplay) {
 
-                    if (language.equals("English")) {
+                    if (language.equals("English") || language.equals("Anglais")) {
                         sharedPreferences
                                 .edit()
                                 .putString("lang", "en-EN")
                                 .apply();
-                        setLocale("en",SettingActivity.this);
+                        setLocale("en", SettingActivity.this);
                         finish();
                         startActivity(new Intent(SettingActivity.this, SettingActivity.class));
 
                     }
-                    if (language.equals("French")) {
+                    if (language.equals("French") || language.equals("Francais")) {
                         sharedPreferences
                                 .edit()
                                 .putString("lang", "fr-FR")
                                 .apply();
-                        setLocale("fr",SettingActivity.this);
+                        setLocale("fr", SettingActivity.this);
                         finish();
-                        startActivity( new Intent(SettingActivity.this, SettingActivity.class));
-
-
+                        startActivity(new Intent(SettingActivity.this, SettingActivity.class));
                     }
-
-
                 }
                 initialDisplay = false;
-
             }
 
             @Override
@@ -101,7 +89,7 @@ public class SettingActivity extends BaseDrawerActivity {
 
     }
 
-    public static  void setLocale(String lang, Context contextt) {
+    public static void setLocale(String lang, Context contextt) {
         Locale myLocale = new Locale(lang);
         Resources res = contextt.getResources();
         DisplayMetrics dm = res.getDisplayMetrics();

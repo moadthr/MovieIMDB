@@ -14,8 +14,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:paddingTop="5dp"
         android:text="General"
         android:textColor="#B40404"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
@@ -25,7 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/language"
-        android:text="Language" />
+        android:text="@string/lang" />
 
     <Spinner
         android:id="@+id/language"
@@ -37,11 +39,7 @@
         android:layout_marginLeft="86dp"
         android:layout_marginStart="86dp"
         android:layout_marginTop="77dp"
-        android:layout_weight="1"
-       />
-
-
-
+        android:layout_weight="1" />
 
 
 </RelativeLayout>

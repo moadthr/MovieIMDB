@@ -78,7 +78,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         layoutManager = new LinearLayoutManager(this);
         mNameList.setLayoutManager(layoutManager);
 
-
         movieService = MovieApi.getClient().create(MovieService.class);	//1
 
     }
@@ -113,15 +112,12 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
 
     private Call<TopRatedMovies> callTopRatedMoviesApi() {	//2
         return movieService.getTopRatedMovies(
@@ -138,7 +134,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         return mNameList;
     }
 
-
     public void changeAdapter (int layout ){
 
 
@@ -150,8 +145,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
          mNameList.setItemAnimator(new DefaultItemAnimator());
          mNameList.setAdapter(adapterPagination);
          mNameList.setHasFixedSize(true);
-
-
 
           mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
             @Override
@@ -191,9 +184,7 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
                      loadFirstPage();
             }
         }, 1000);
-
     }
-
     private void loadFirstPage() {
 
         callTopRatedMoviesApi().enqueue(new Callback<TopRatedMovies>() {
@@ -224,7 +215,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             }
         });
 
-
     }
 
     private void loadNextPage() {
@@ -251,34 +241,26 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
     }
         @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-
-        int test = showGrid ;
         if (id == R.id.showGrid ) {
             if(showGrid%3 == 0) {
                 layoutcard = R.layout.cell_cards;
                 changeAdapter(layoutcard);
                 showGrid++;
-                return true;
             }
             else if(showGrid%3 == 1){
                 layoutcard = R.layout.cell_cards_2;
                changeAdapter(layoutcard);
                 showGrid++;
-                return true;
             }
             else if(showGrid%3 == 2) {
                 layoutcard = R.layout.cell_cards_3;
                 changeAdapter(layoutcard);
                 showGrid++;
-                return true;
             }
-
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -288,21 +270,16 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
     @Override
     public void onListItemClick(Result result) {
         Intent intent = new Intent(this,MovieDetails_Activity.class);
-        // intent.putExtra("list", list);
-
         Bundle args = new Bundle();
         result.setType("movie");
         args.putSerializable("result",(Serializable)result);
         intent.putExtra("BUNDLE",args);
-        //intent.putStringArrayListExtra(EXTRA_CARS,cars);
         startActivity(intent);
 
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
+        finish();
     }
-
 }

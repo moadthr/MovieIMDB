@@ -29,9 +29,9 @@ import retrofit2.Response;
 
 public class TVShowsActivity extends BaseDrawerActivity implements ListItemClickListener {
 
-    public static RecyclerView mNameList ;
-    static int  showGrid    ;
-    static int layoutcard ;
+    public static RecyclerView mNameList;
+    static int showGrid;
+    static int layoutcard;
     PaginationAdapter adapterPagination;
     ProgressBar progressBar;
     private static final int PAGE_START = 1;
@@ -40,7 +40,7 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
     private MovieService movieService;
-    static String language  ;
+    static String language;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -50,27 +50,25 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         getLayoutInflater().inflate(R.layout.activity_tvshows, frameLayout);
 
         layoutcard = R.layout.cell_cards;
-        showGrid = 1 ;
+        showGrid = 1;
         load();
 
         mNameList = (RecyclerView) findViewById(R.id.rv_names);
         progressBar = (ProgressBar) findViewById(R.id.main_progress);
-        movieService = MovieApi.getClient().create(MovieService.class);	//1
+        movieService = MovieApi.getClient().create(MovieService.class);    //1
     }
 
-    public void load (){
-        sharedPreferences = getBaseContext().getSharedPreferences("MyPref",MODE_PRIVATE);
-        if (sharedPreferences.contains("lang")){
-            language = sharedPreferences.getString("lang",null);
-        }
-        else{
+    public void load() {
+        sharedPreferences = getBaseContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        if (sharedPreferences.contains("lang")) {
+            language = sharedPreferences.getString("lang", null);
+        } else {
             sharedPreferences
                     .edit()
                     .putString("lang", "en-EN")
                     .apply();
-            language = sharedPreferences.getString("lang",null);
+            language = sharedPreferences.getString("lang", null);
         }
-
 
     }
 
@@ -82,7 +80,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         adapter.notifyDataSetChanged();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -90,34 +87,30 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         return true;
     }
 
-
-
-    private Call<PopularTvShows> callPopularTvShowsApi() {	//2
+    private Call<PopularTvShows> callPopularTvShowsApi() {    //2
         return movieService.getTvSeries(
-                getString(R.string.my_api_key),language,
+                getString(R.string.my_api_key), language,
                 currentPage
         );
     }
-    private List<Result> fetchResults(Response<PopularTvShows> response) {	//3
+
+    private List<Result> fetchResults(Response<PopularTvShows> response) {    //3
         PopularTvShows populartvShows = response.body();
         return populartvShows.getResults();
     }
 
-
-    public void changeAdapter (int layout ){
+    public void changeAdapter(int layout) {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mNameList.setLayoutManager(layoutManager);
-        if(layout == R.layout.cell_cards_3){
+        if (layout == R.layout.cell_cards_3) {
             mNameList.setLayoutManager(new GridLayoutManager(this, 3));
         }
 
-        adapterPagination = new PaginationAdapter(TVShowsActivity.this,this,layout);
+        adapterPagination = new PaginationAdapter(TVShowsActivity.this, this, layout);
         mNameList.setItemAnimator(new DefaultItemAnimator());
         mNameList.setAdapter(adapterPagination);
         mNameList.setHasFixedSize(true);
-
-
 
         mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
             @Override
@@ -125,7 +118,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
                 isLoading = true;
                 currentPage += 1;
 
-                // mocking network delay for API call
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -150,7 +142,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
             }
         });
 
-
         // mocking network delay for API call
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -160,8 +151,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         }, 1000);
 
 
-
-
     }
 
     private void loadFirstPage() {
@@ -169,8 +158,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         callPopularTvShowsApi().enqueue(new Callback<PopularTvShows>() {
             @Override
             public void onResponse(Call<PopularTvShows> call, Response<PopularTvShows> response) {
-                // Got data. Send it to adapter
-
                 List<Result> results = fetchResults(response);
                 progressBar.setVisibility(View.GONE);
                 adapterPagination.addAll(results);
@@ -184,8 +171,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
                 Toast.makeText(TVShowsActivity.this, "error", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     private void loadNextPage() {
@@ -210,55 +195,45 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-
-        int test = showGrid ;
-        if (id == R.id.showGrid ) {
-            if(showGrid%3 == 0) {
+        if (id == R.id.showGrid) {
+            if (showGrid % 3 == 0) {
                 layoutcard = R.layout.cell_cards;
                 changeAdapter(layoutcard);
                 showGrid++;
-                return true;
-            }
-            else if(showGrid%3 == 1){
+            } else if (showGrid % 3 == 1) {
                 layoutcard = R.layout.cell_cards_2;
                 changeAdapter(layoutcard);
                 showGrid++;
-                return true;
-            }
-            else if(showGrid%3 == 2) {
+            } else if (showGrid % 3 == 2) {
                 layoutcard = R.layout.cell_cards_3;
                 changeAdapter(layoutcard);
                 showGrid++;
-                return true;
             }
-
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
 
     @Override
     public void onListItemClick(Result tvshow) {
-        Intent intent = new Intent(this,MovieDetails_Activity.class);
-        // intent.putExtra("list", list);
-
+        Intent intent = new Intent(this, MovieDetails_Activity.class);
         Bundle args = new Bundle();
         tvshow.setType("tvshow");
-        args.putSerializable("result",(Serializable)tvshow);
-        intent.putExtra("BUNDLE",args);
-        //intent.putStringArrayListExtra(EXTRA_CARS,cars);
+        args.putSerializable("result", (Serializable) tvshow);
+        intent.putExtra("BUNDLE", args);
         startActivity(intent);
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
 

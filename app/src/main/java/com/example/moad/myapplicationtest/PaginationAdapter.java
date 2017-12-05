@@ -29,8 +29,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int LOADING = 1;
     private List<Result> movies;
     private Context context;
-    int layoutCard ;
-    public final  ListItemClickListener monclickListener ;
+    int layoutCard;
+    public final ListItemClickListener monclickListener;
 
     public void setMovies(List<Result> movies) {
         this.movies = movies;
@@ -41,11 +41,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return movies;
     }
 
-    public PaginationAdapter(ListItemClickListener Listener,Context context, int layou) {
+    public PaginationAdapter(ListItemClickListener Listener, Context context, int layou) {
         this.context = context;
         monclickListener = Listener;
         movies = new ArrayList<>();
-        this.layoutCard=layou;
+        this.layoutCard = layou;
     }
 
 
@@ -57,7 +57,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         switch (viewType) {
             case ITEM:
-                viewHolder = getViewHolder(parent, inflater,layoutCard);
+                viewHolder = getViewHolder(parent, inflater, layoutCard);
 
                 break;
             case LOADING:
@@ -69,10 +69,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @NonNull
-    private RecyclerView.ViewHolder getViewHolder(ViewGroup parent, LayoutInflater inflater,int layout) {
+    private RecyclerView.ViewHolder getViewHolder(ViewGroup parent, LayoutInflater inflater, int layout) {
         RecyclerView.ViewHolder viewHolder;
-        View v1 = LayoutInflater.from(parent.getContext()).inflate( layout,parent,false);
-        viewHolder = new MovieVH(v1,layoutCard);
+        View v1 = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+        viewHolder = new MovieVH(v1, layoutCard);
 
         return viewHolder;
     }
@@ -86,15 +86,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 MovieVH movieVH = (MovieVH) holder;
 
-                if(layoutCard != R.layout.cell_cards_3) {
-                    if(movie.getTitle()!= null)
+                if (layoutCard != R.layout.cell_cards_3) {
+                    if (movie.getTitle() != null)
                         movieVH.title.setText(movie.getTitle());
-                    if(movie.getOriginalName()!= null)
+                    if (movie.getOriginalName() != null)
                         movieVH.title.setText(movie.getOriginalName());
                     movieVH.subtitle.setText(movie.getOverview());
                 }
-
-                String url = ApiKey.urlImage+""+movie.getPosterPath();
+                String url = ApiKey.urlImage + "" + movie.getPosterPath();
                 Picasso.with(movieVH.imageView.getContext()).load(url).fit().centerInside().into(movieVH.imageView);
 
                 break;
@@ -167,35 +166,36 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     protected class MovieVH extends RecyclerView.ViewHolder {
 
-        TextView title ;
+        TextView title;
         private ImageView imageView;
-        TextView subtitle ;
-        int layout ;
-        public MovieVH(View itemView,int layou) {
+        TextView subtitle;
+        int layout;
+
+        public MovieVH(View itemView, int layou) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
 
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     int clickedPosition = getAdapterPosition();
                     monclickListener.onListItemClick(movies.get(clickedPosition));
                 }
 
             });
-            layout= layou;
-            if(layout != R.layout.cell_cards_3){
+            layout = layou;
+            if (layout != R.layout.cell_cards_3) {
                 title = (TextView) itemView.findViewById(R.id.text);
                 subtitle = (TextView) itemView.findViewById(R.id.overview);
 
             }
 
-                imageView = (ImageView) itemView.findViewById(R.id.Cell_cards_img);
+            imageView = (ImageView) itemView.findViewById(R.id.Cell_cards_img);
 
         }
 
     }
 
-
-    protected class LoadingVH extends RecyclerView.ViewHolder   {
+    protected class LoadingVH extends RecyclerView.ViewHolder {
 
         public LoadingVH(View itemView) {
             super(itemView);

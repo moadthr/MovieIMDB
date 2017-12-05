@@ -34,7 +34,7 @@ import java.util.List;
 
 public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    // flag for footer ProgressBar (i.e. last item of list)
+
     private boolean isLoadingAdded = false;
     private static final int ITEM = 0;
     private static final int LOADING = 1;
@@ -107,7 +107,7 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 break;
             case LOADING:
-//                Do nothing
+
                 break;
         }
     }
@@ -186,8 +186,7 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 @Override
                 public void onClick(View v) {
-                    int clickedPosition = getAdapterPosition();
-      //              monclickListener.onListItemClick(Tvshows.get(clickedPosition));
+
                 }
 
             });
@@ -197,20 +196,16 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
                 subtitle = (TextView) itemView.findViewById(R.id.overview);
 
             }
-
             imageView = (ImageView) itemView.findViewById(R.id.Cell_cards_img);
 
         }
-
     }
-
 
     protected class LoadingVH extends RecyclerView.ViewHolder {
 
         public LoadingVH(View itemView) {
             super(itemView);
         }
-
 
     }
 }

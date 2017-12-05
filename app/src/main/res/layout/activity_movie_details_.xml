@@ -1,67 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.moad.myapplicationtest.MovieDetails_Activity"
-    android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/imgMovie"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitXY" />
-
-    <TextView
-        android:id="@+id/titleMovie"
-        android:layout_width="174dp"
-        android:layout_height="30dp"
-        android:paddingTop="8dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:layout_width="160dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="210dp"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        tools:context="com.example.moad.myapplicationtest.MovieDetails_Activity">
 
         <ImageView
-            android:id="@+id/imgFavoris"
-            android:layout_width="80dp"
+            android:id="@+id/imgMovie"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:paddingBottom="3dp"/>
+
+        <TextView
+            android:id="@+id/titleMovie"
+            android:layout_width="174dp"
             android:layout_height="30dp"
-            android:layout_weight="1" />
+            android:paddingTop="8dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/imageshare"
-            android:layout_width="80dp"
+        <LinearLayout
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="210dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgFavoris"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/imageshare"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:src="@drawable/ic_share_black_24dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/DescriptionMovie"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:src="@drawable/ic_share_black_24dp" />
+            android:paddingBottom="5dp"
+            android:paddingTop="20dp"
+            android:text="TextView"
+            android:textSize="14sp" />
+
+        <fragment
+            android:id="@+id/youtube_fragment"
+            android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/DescriptionMovie"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:paddingTop="10dp"
-        android:text="TextView" />
-
-    <fragment
-        android:id="@+id/youtube_fragment"
-        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
-        android:layout_width="match_parent"
-        android:layout_height="250dp" />
-
-</LinearLayout>
 </ScrollView>
