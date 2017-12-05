@@ -136,8 +136,9 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
     public void changeAdapter (int layout ){
 
-
-        if(layout == R.layout.cell_cards_3){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mNameList.setLayoutManager(layoutManager);
+        if (layout == R.layout.cell_cards_3) {
             mNameList.setLayoutManager(new GridLayoutManager(this, 3));
         }
 
@@ -245,22 +246,21 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         int id = item.getItemId();
 
         if (id == R.id.showGrid ) {
-            if(showGrid%3 == 0) {
+              if (showGrid % 3 == 0) {
                 layoutcard = R.layout.cell_cards;
                 changeAdapter(layoutcard);
                 showGrid++;
-            }
-            else if(showGrid%3 == 1){
+            } else if (showGrid % 3 == 1) {
                 layoutcard = R.layout.cell_cards_2;
-               changeAdapter(layoutcard);
+                changeAdapter(layoutcard);
                 showGrid++;
-            }
-            else if(showGrid%3 == 2) {
+            } else if (showGrid % 3 == 2) {
                 layoutcard = R.layout.cell_cards_3;
                 changeAdapter(layoutcard);
                 showGrid++;
             }
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -278,8 +278,4 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
 
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
 }

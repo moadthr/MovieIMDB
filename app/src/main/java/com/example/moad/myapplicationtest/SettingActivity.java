@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
 
 import android.view.View;
@@ -97,5 +98,6 @@ public class SettingActivity extends BaseDrawerActivity {
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
     }
+
 
 }

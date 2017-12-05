@@ -231,10 +231,4 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-
 }

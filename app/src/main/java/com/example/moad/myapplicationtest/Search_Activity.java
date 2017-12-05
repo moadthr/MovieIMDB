@@ -1,5 +1,6 @@
 package com.example.moad.myapplicationtest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -53,6 +55,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         super.onCreate(savedInstanceState);
         setTitle(R.string.Search);
         getLayoutInflater().inflate(R.layout.activity_search_, frameLayout);
+
 
         searchView = (SearchView) findViewById(R.id.searchview);
         btnsearch = (Button) findViewById(R.id.btnsearch);
@@ -116,6 +119,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.showGrid).setVisible(false);
         return true;
     }
 
@@ -184,17 +188,17 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         callTopRatedMoviesApi().enqueue(new Callback<SearchResult>() {
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
-                if (currentPage == TOTAL_PAGES) {
-                    List<Result> results = fetchResults(response);
-                    adapterPagination.addAll(results);
-                    isLastPage = true;
-                }
-                else {
-                    List<Result> results = fetchResults(response);
-                    progressBar.setVisibility(View.GONE);
-                    adapterPagination.addAll(results);
-                    if (currentPage <= TOTAL_PAGES) adapterPagination.addLoadingFooter();
-                    else isLastPage = true;
+                List<Result> results = fetchResults(response);
+                if (results.size() != 0) {
+                    if (currentPage == TOTAL_PAGES) {
+                        adapterPagination.addAll(results);
+                        isLastPage = true;
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        adapterPagination.addAll(results);
+                        if (currentPage <= TOTAL_PAGES) adapterPagination.addLoadingFooter();
+                        else isLastPage = true;
+                    }
                 }
             }
 
@@ -205,6 +209,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         });
 
     }
+
     private void loadNextPage() {
 
         callTopRatedMoviesApi().enqueue(new Callback<SearchResult>() {
@@ -257,12 +262,16 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         isLastPage = false;
         currentPage = 1;
         isInitialise = true;
-        if (query != null && !query.equals(""))
+        if (query != null && !query.equals("")) {
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
             changeAdapter(layoutcard);
+        }
+
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
+
 }

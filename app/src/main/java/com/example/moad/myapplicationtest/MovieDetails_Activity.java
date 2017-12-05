@@ -238,8 +238,4 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
 
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
 }

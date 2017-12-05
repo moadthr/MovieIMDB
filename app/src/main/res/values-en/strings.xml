@@ -5,6 +5,7 @@
     <string name="languageDef">English</string>
     <string name="YoutubeApi">AIzaSyCtIHSPmKnRjQ9nzUTlZfsbY339I6ivcPE</string>
     <string name="lang">Language </string>
+    <string name="general">General</string>
     <string name="Home">Movie</string>
     <string name="Details">Details</string>
     <string name="TvShows">TvShows</string>

@@ -81,6 +81,7 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.showGrid).setVisible(false);
         return true;
     }
 
@@ -127,11 +128,6 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
         args.putSerializable("result",(Serializable)result);
         intent.putExtra("BUNDLE",args);
         startActivity(intent);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
 }

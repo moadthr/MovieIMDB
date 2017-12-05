@@ -12,9 +12,4 @@ public class AboutActivity extends BaseDrawerActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-    }
 }

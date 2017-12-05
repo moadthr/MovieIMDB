@@ -80,42 +80,38 @@ public class BaseDrawerActivity extends AppCompatActivity {
     }
 
     private void selectItemFromDrawer(int position) {
-
+        Intent intent = null;
+        boolean setting = false;
         if (mNavItems.get(position).getmTitle() == R.string.Setting) {
-            Intent intent = new Intent(this, SettingActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            intent = new Intent(this, SettingActivity.class);
+            setting = true;
+
         }
         if (mNavItems.get(position).getmTitle() == R.string.Home) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
+            intent = new Intent(this, MainActivity.class);
+
         }
         if (mNavItems.get(position).getmTitle() == R.string.TvShows) {
-            Intent intent = new Intent(this, TVShowsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
+            intent = new Intent(this, TVShowsActivity.class);
+
         }
         if (mNavItems.get(position).getmTitle() == R.string.Search) {
-            Intent intent = new Intent(this, Search_Activity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
+            intent = new Intent(this, Search_Activity.class);
+
         }
         if (mNavItems.get(position).getmTitle() == R.string.Favoris) {
-            Intent intent = new Intent(this, Favoris_Activity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
+            intent = new Intent(this, Favoris_Activity.class);
+
         }
         if (mNavItems.get(position).getmTitle() == R.string.About) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
+            intent = new Intent(this, AboutActivity.class);
+
         }
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_NO_ANIMATION);
+        if (!setting)
+            finish();
+        startActivity(intent);
         // Close the drawer
         mDrawerLayout.closeDrawer(mDrawerPane);
     }
