@@ -63,7 +63,7 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
     private MovieService movieService;
     FrameLayout frameLayout;
     YouTubePlayerSupportFragment frag ;
-
+    private YouTubePlayer YPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +72,7 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
         //setContentView(R.layout.activity_movie_details_);
           getLayoutInflater().inflate(R.layout.activity_movie_details_, frameLayout);
          frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
-        frag.initialize(getString(R.string.YoutubeApi), this);
+
         sharedPreferences   = getBaseContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         titleMovie =  (TextView) findViewById(R.id.titleMovie);
         DescriptionMovie =  (TextView) findViewById(R.id.DescriptionMovie);
@@ -174,7 +174,6 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
             }
         });
 
-      //  youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         movieService = MovieApi.getClient().create(MovieService.class);	//1
         if(result.getType().equals("movie"))
             getVideoId();
@@ -188,20 +187,19 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
 
 
     @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-        if (!wasRestored) {
-            player.cueVideo(moviekey); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+    public void onInitializationSuccess (YouTubePlayer.Provider provider, YouTubePlayer
+            youTubePlayer,boolean b){
+        if (!b) {
+            YPlayer = youTubePlayer;
+            YPlayer.loadVideo(moviekey);
+            YPlayer.play();
         }
     }
 
     @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
-        if (errorReason.isUserRecoverableError()) {
-            errorReason.getErrorDialog(this, RECOVERY_REQUEST).show();
-        } else {
-            String error = String.format(getString(R.string.player_error), errorReason.toString());
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        }
+    public void onInitializationFailure (YouTubePlayer.Provider
+                                                 provider, YouTubeInitializationResult youTubeInitializationResult){
+
     }
 
     private Call<Videos> callVideoApi() {	//2
@@ -225,8 +223,9 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
                 // Got data. Send it to adapter
 
                     List<Video> results = fetchResults(response);
-                    if(results == null)
-                        moviekey= null;
+                    if(results == null || results.size()==0) {
+                        moviekey = null;
+                    }
                     else {
                         moviekey = results.get(0).getKey();
                         frag.initialize(getString(R.string.YoutubeApi), MovieDetails_Activity.this);
@@ -254,7 +253,7 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
                     moviekey= null;
                 else {
                     moviekey = results.get(0).getKey();
-                    youTubeView.initialize(getString(R.string.YoutubeApi), MovieDetails_Activity.this);
+                    frag.initialize(getString(R.string.YoutubeApi), MovieDetails_Activity.this);
                 }
 
 
@@ -268,5 +267,9 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 }

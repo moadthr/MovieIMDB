@@ -11,4 +11,10 @@ public class AboutActivity extends BaseDrawerActivity {
         getLayoutInflater().inflate(R.layout.activity_about, frameLayout);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 }

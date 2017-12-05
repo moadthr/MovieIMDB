@@ -52,7 +52,6 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
         layoutcard = R.layout.cell_cards_2;
         mNameList = (RecyclerView) findViewById(R.id.rv_names);
         progressBar = (ProgressBar) findViewById(R.id.main_progress);
-        load();
 
     }
 
@@ -157,6 +156,10 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 
 }

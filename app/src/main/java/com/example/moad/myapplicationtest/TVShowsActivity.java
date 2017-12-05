@@ -37,7 +37,7 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int TOTAL_PAGES = 15;
+    private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
     private MovieService movieService;
     static String language  ;

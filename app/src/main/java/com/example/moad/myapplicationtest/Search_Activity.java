@@ -39,7 +39,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int TOTAL_PAGES = 15;
+    private int TOTAL_PAGES = 5;
     private int currentPage = PAGE_START;
     private MovieService movieService;
     static String language  ;
@@ -140,9 +140,6 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mNameList.setLayoutManager(layoutManager);
-        if(layout == R.layout.cell_cards_3){
-            mNameList.setLayoutManager(new GridLayoutManager(this, 3));
-        }
 
         adapterPagination = new PaginationAdapter(Search_Activity.this,this,layout);
         mNameList.setItemAnimator(new DefaultItemAnimator());
@@ -179,7 +176,6 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
             }
         });
 
-        // mocking network delay for API call
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -218,7 +214,6 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
             }
         });
 
-
     }
 
     private void loadNextPage() {
@@ -229,12 +224,13 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
                 adapterPagination.removeLoadingFooter();
                 isLoading = false;
 
-
                     List<Result> results = fetchResults(response);
                     adapterPagination.addAll(results);
 
-                    if (currentPage != TOTAL_PAGES) adapterPagination.addLoadingFooter();
-                    else isLastPage = true;
+                    if (currentPage != TOTAL_PAGES)
+                        adapterPagination.addLoadingFooter();
+                    else
+                        isLastPage = true;
                 }
 
             @Override
@@ -244,6 +240,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -269,6 +266,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         // intent.putExtra("list", list);
 
         Bundle args = new Bundle();
+        result.setType("movie");
         args.putSerializable("result",(Serializable)result);
         intent.putExtra("BUNDLE",args);
         //intent.putStringArrayListExtra(EXTRA_CARS,cars);
@@ -287,4 +285,9 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 }

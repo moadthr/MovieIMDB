@@ -34,15 +34,13 @@ public class SettingActivity extends BaseDrawerActivity {
         getLayoutInflater().inflate(R.layout.activity_setting, frameLayout);
         initialDisplay = true ;
         spinnerLanguages = (Spinner) findViewById(R.id.language);
-        spinnerSizeImg = (Spinner) findViewById(R.id.imgSize);
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> adapterimgSize = ArrayAdapter.createFromResource(this, R.array.imgSize, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerLanguages.setAdapter(adapter);
-        spinnerSizeImg.setAdapter(adapterimgSize);
+     
         sharedPreferences = getBaseContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         language = sharedPreferences.getString("lang",null);
 
