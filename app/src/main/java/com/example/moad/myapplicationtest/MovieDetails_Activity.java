@@ -112,7 +112,7 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
                     shareBody = "you should see this " + result.getType() + " : " + result.getTitle() + " ;)";
                 if (result.getType().equals("tvshow"))
                     shareBody = "you should see this " + result.getType() + " : " + result.getOriginalName() + " ;)";
-                String objet = "MDB Movie";
+                String objet = "IMDB Movie";
                 myintent.putExtra(Intent.EXTRA_SUBJECT, objet);
                 myintent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(myintent, "Share Using"));
