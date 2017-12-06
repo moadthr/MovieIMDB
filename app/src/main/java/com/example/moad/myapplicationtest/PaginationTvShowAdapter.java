@@ -1,61 +1,46 @@
 package com.example.moad.myapplicationtest;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.moad.myapplicationtest.model.TvShow;
-
-import java.util.List;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.moad.myapplicationtest.model.Result;
-import com.example.moad.myapplicationtest.model.TopRated;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * /**
- * Created by moad on 28/11/2017.
+ * Created by moad on 25/11/2017.
  */
 
-public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PaginationTvshowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-
+    // flag for footer ProgressBar (i.e. last item of list)
     private boolean isLoadingAdded = false;
     private static final int ITEM = 0;
     private static final int LOADING = 1;
-    private List<TvShow> Tvshows;
+    private List<Result> movies;
     private Context context;
     int layoutCard;
     public final ListItemClickListener monclickListener;
 
-    public void setMovies(List<TvShow> movies) {
-        this.Tvshows = movies;
+    public void setMovies(List<Result> movies) {
+        this.movies = movies;
     }
 
-    public List<TvShow> getMovies() {
+    public List<Result> getMovies() {
 
-        return Tvshows;
+        return movies;
     }
 
-    public PaginationTvShowAdapter(ListItemClickListener Listener, Context context, int layou) {
+    public PaginationTvshowAdapter(ListItemClickListener Listener, Context context, int layou) {
         this.context = context;
         monclickListener = Listener;
-        Tvshows = new ArrayList<>();
+        movies = new ArrayList<>();
         this.layoutCard = layou;
     }
 
@@ -68,7 +53,7 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         switch (viewType) {
             case ITEM:
-                viewHolder = getViewHolder(parent, inflater, layoutCard);
+                viewHolder = getViewHolder(parent, inflater,  TVShowsActivity.layoutcard);
 
                 break;
             case LOADING:
@@ -90,53 +75,54 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        TvShow tvshow = Tvshows.get(position);
+        Result movie = movies.get(position);
 
         switch (getItemViewType(position)) {
             case ITEM:
 
                 MovieVH movieVH = (MovieVH) holder;
 
-                if (layoutCard != R.layout.cell_cards_3) {
-                    movieVH.title.setText(tvshow.getOriginalName());
-                    movieVH.subtitle.setText(tvshow.getOverview());
+                if (TVShowsActivity.layoutcard != R.layout.cell_cards_3) {
+                    if (movie.getTitle() != null)
+                        movieVH.title.setText(movie.getTitle());
+                    if (movie.getOriginalName() != null)
+                        movieVH.title.setText(movie.getOriginalName());
+                    movieVH.subtitle.setText(movie.getOverview());
                 }
-
-                String url = ApiKey.urlImage + "" + tvshow.getPosterPath();
+                String url = ApiKey.urlImage + "" + movie.getPosterPath();
                 Picasso.with(movieVH.imageView.getContext()).load(url).fit().centerInside().into(movieVH.imageView);
 
                 break;
             case LOADING:
-
                 break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (position == Tvshows.size() - 1 && isLoadingAdded) ? LOADING : ITEM;
+        return (position == movies.size() - 1 && isLoadingAdded) ? LOADING : ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return Tvshows == null ? 0 : Tvshows.size();
+        return movies == null ? 0 : movies.size();
     }
 
-    public void add(TvShow mc) {
-        Tvshows.add(mc);
-        notifyItemInserted(Tvshows.size() - 1);
+    public void add(Result mc) {
+        movies.add(mc);
+        notifyItemInserted(movies.size() - 1);
     }
 
-    public void addAll(List<TvShow> mcList) {
-        for (TvShow mc : mcList) {
+    public void addAll(List<Result> mcList) {
+        for (Result mc : mcList) {
             add(mc);
         }
     }
 
-    public void remove(TvShow city) {
-        int position = Tvshows.indexOf(city);
+    public void remove(Result city) {
+        int position = movies.indexOf(city);
         if (position > -1) {
-            Tvshows.remove(position);
+            movies.remove(position);
             notifyItemRemoved(position);
         }
     }
@@ -154,23 +140,23 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void addLoadingFooter() {
         isLoadingAdded = true;
-        add(new TvShow());
+        add(new Result());
     }
 
     public void removeLoadingFooter() {
         isLoadingAdded = false;
 
-        int position = Tvshows.size() - 1;
-        TvShow item = getItem(position);
+        int position = movies.size() - 1;
+        Result item = getItem(position);
 
         if (item != null) {
-            Tvshows.remove(position);
+            movies.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    public TvShow getItem(int position) {
-        return Tvshows.get(position);
+    public Result getItem(int position) {
+        return movies.get(position);
     }
 
     protected class MovieVH extends RecyclerView.ViewHolder {
@@ -186,19 +172,21 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 @Override
                 public void onClick(View v) {
-
+                    int clickedPosition = getAdapterPosition();
+                    monclickListener.onListItemClick(movies.get(clickedPosition));
                 }
 
             });
-            layout = layou;
-            if (layout != R.layout.cell_cards_3) {
+            if (TVShowsActivity.layoutcard != R.layout.cell_cards_3) {
                 title = (TextView) itemView.findViewById(R.id.text);
                 subtitle = (TextView) itemView.findViewById(R.id.overview);
 
             }
+
             imageView = (ImageView) itemView.findViewById(R.id.Cell_cards_img);
 
         }
+
     }
 
     protected class LoadingVH extends RecyclerView.ViewHolder {
@@ -207,5 +195,8 @@ public class PaginationTvShowAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
         }
 
+
     }
 }
+
+

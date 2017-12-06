@@ -1,53 +1,29 @@
 package com.example.moad.myapplicationtest;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-
-
-import com.example.moad.myapplicationtest.model.NavItem;
 import com.example.moad.myapplicationtest.model.Result;
-import com.example.moad.myapplicationtest.model.TopRated;
 import com.example.moad.myapplicationtest.model.TopRatedMovies;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 
 public class MainActivity extends BaseDrawerActivity implements ListItemClickListener{
-
-
     public static RecyclerView mNameList ;
     static int  showGrid    ;
     static int layoutcard ;
@@ -63,8 +39,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
     LinearLayoutManager layoutManager;
     SharedPreferences sharedPreferences;
 
-
-
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +52,47 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         layoutManager = new LinearLayoutManager(this);
         mNameList.setLayoutManager(layoutManager);
 
-        movieService = MovieApi.getClient().create(MovieService.class);	//1
+        movieService = MovieApi.getClient().create(MovieService.class);
+    }
 
+    public void changeLayout(){
+
+        mNameList.setLayoutManager(layoutManager);
+        if (layoutcard == R.layout.cell_cards_3) {
+            mNameList.setLayoutManager(new GridLayoutManager(this, 3));
+        }
+
+        mNameList.setAdapter(adapterPagination);
+        mNameList.setHasFixedSize(true);
+        mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadNextPage();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return TOTAL_PAGES;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
     }
     public void load (){
 
@@ -105,16 +118,12 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
     protected void onResume() {
         super.onResume();
         load();
-        int a= currentPage ;
-        boolean b=isLoading;
         changeAdapter(layoutcard);
         adapter.notifyDataSetChanged();
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -142,12 +151,12 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             mNameList.setLayoutManager(new GridLayoutManager(this, 3));
         }
 
-         adapterPagination = new PaginationAdapter(MainActivity.this,this,layout);
-         mNameList.setItemAnimator(new DefaultItemAnimator());
-         mNameList.setAdapter(adapterPagination);
-         mNameList.setHasFixedSize(true);
+        adapterPagination = new PaginationAdapter(MainActivity.this,this,layout);
+        mNameList.setItemAnimator(new DefaultItemAnimator());
+        mNameList.setAdapter(adapterPagination);
+        mNameList.setHasFixedSize(true);
 
-          mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+        mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
@@ -182,7 +191,7 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                     loadFirstPage();
+                loadFirstPage();
             }
         }, 1000);
     }
@@ -191,7 +200,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         callTopRatedMoviesApi().enqueue(new Callback<TopRatedMovies>() {
             @Override
             public void onResponse(Call<TopRatedMovies> call, Response<TopRatedMovies> response) {
-                // Got data. Send it to adapter
 
                 if (currentPage == TOTAL_PAGES) {
                     List<Result> results = fetchResults(response);
@@ -240,23 +248,22 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
             }
         });
     }
-        @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
         if (id == R.id.showGrid ) {
-              if (showGrid % 3 == 0) {
+            if (showGrid % 3 == 0) {
                 layoutcard = R.layout.cell_cards;
-                changeAdapter(layoutcard);
+                changeLayout();
                 showGrid++;
             } else if (showGrid % 3 == 1) {
                 layoutcard = R.layout.cell_cards_2;
-                changeAdapter(layoutcard);
+                changeLayout();
                 showGrid++;
             } else if (showGrid % 3 == 2) {
                 layoutcard = R.layout.cell_cards_3;
-                changeAdapter(layoutcard);
+                changeLayout();
                 showGrid++;
             }
             return true;
@@ -277,5 +284,6 @@ public class MainActivity extends BaseDrawerActivity implements ListItemClickLis
         startActivity(intent);
 
     }
+
 
 }

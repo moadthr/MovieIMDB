@@ -3,38 +3,27 @@ package com.example.moad.myapplicationtest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import com.example.moad.myapplicationtest.model.Result;
-import com.example.moad.myapplicationtest.model.SearchResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Favoris_Activity extends BaseDrawerActivity  implements ListItemClickListener {
     SharedPreferences sharedPreferences;
     List<Result> favoisList ;
     String jsonFavoris ;
-    PaginationAdapter adapterPagination;
+    PaginationFavoisAdapter adapterPagination;
     ProgressBar progressBar;
     static int layoutcard ;
     private static final int PAGE_START = 1;
@@ -56,7 +45,6 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
     }
 
     public void load (){
-
         Gson gson = new Gson();
         Type type = new TypeToken<List<Result>>(){}.getType();
         sharedPreferences = getBaseContext().getSharedPreferences("MyPref",MODE_PRIVATE);
@@ -79,18 +67,16 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.showGrid).setVisible(false);
         return true;
     }
 
     public void changeAdapter (int layout ){
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mNameList.setLayoutManager(layoutManager);
 
-        adapterPagination = new PaginationAdapter(Favoris_Activity.this,this,layout);
+        adapterPagination = new PaginationFavoisAdapter(Favoris_Activity.this,this,layout);
         mNameList.setItemAnimator(new DefaultItemAnimator());
         mNameList.setAdapter(adapterPagination);
         mNameList.setHasFixedSize(true);
@@ -110,7 +96,6 @@ public class Favoris_Activity extends BaseDrawerActivity  implements ListItemCli
                 adapterPagination.addAll(results);
                  isLastPage = true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

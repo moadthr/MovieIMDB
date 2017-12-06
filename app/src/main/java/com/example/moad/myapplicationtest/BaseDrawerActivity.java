@@ -1,13 +1,10 @@
 package com.example.moad.myapplicationtest;
 
 import android.content.Intent;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +13,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import com.example.moad.myapplicationtest.model.NavItem;
-
 import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
@@ -55,16 +49,12 @@ public class BaseDrawerActivity extends AppCompatActivity {
         mNavItems.add(new NavItem(R.string.Favoris, R.string.FavorisDetails, R.drawable.ic_favorite_black_24dp));
         mNavItems.add(new NavItem(R.string.About, R.string.AboutDetails, R.drawable.ic_info_black_24dp));
 
-        // DrawerLayout
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-
-        // Populate the Navigtion Drawer with options
         mDrawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
         mDrawerList = (ListView) findViewById(R.id.navList);
         adapter = new DrawerListAdapter(this, mNavItems);
         mDrawerList.setAdapter(adapter);
 
-        // Drawer Item click listeners
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -125,9 +115,6 @@ public class BaseDrawerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == android.R.id.home) {

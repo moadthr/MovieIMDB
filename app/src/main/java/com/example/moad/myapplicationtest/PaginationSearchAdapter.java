@@ -17,7 +17,7 @@ import java.util.List;
  * Created by moad on 25/11/2017.
  */
 
-public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PaginationSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private boolean isLoadingAdded = false;
     private static final int ITEM = 0;
@@ -36,7 +36,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return movies;
     }
 
-    public PaginationAdapter(ListItemClickListener Listener, Context context, int layou) {
+    public PaginationSearchAdapter(ListItemClickListener Listener, Context context, int layou) {
         this.context = context;
         monclickListener = Listener;
         movies = new ArrayList<>();
@@ -52,7 +52,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         switch (viewType) {
             case ITEM:
-                viewHolder = getViewHolder(parent, inflater, MainActivity.layoutcard);
+                viewHolder = getViewHolder(parent, inflater, layoutCard);
 
                 break;
             case LOADING:
@@ -81,7 +81,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 MovieVH movieVH = (MovieVH) holder;
 
-                if (MainActivity.layoutcard != R.layout.cell_cards_3) {
+                if (layoutCard != R.layout.cell_cards_3) {
                     if (movie.getTitle() != null)
                         movieVH.title.setText(movie.getTitle());
                     if (movie.getOriginalName() != null)
@@ -176,11 +176,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
             });
-            if (MainActivity.layoutcard != R.layout.cell_cards_3) {
+            if (layout != R.layout.cell_cards_3) {
                 title = (TextView) itemView.findViewById(R.id.text);
                 subtitle = (TextView) itemView.findViewById(R.id.overview);
+
             }
+
             imageView = (ImageView) itemView.findViewById(R.id.Cell_cards_img);
+
         }
 
     }

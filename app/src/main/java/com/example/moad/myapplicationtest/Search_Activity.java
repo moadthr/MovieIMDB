@@ -32,11 +32,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Search_Activity extends BaseDrawerActivity implements ListItemClickListener {
+
     Button btnsearch;
     public static RecyclerView mNameList;
     static int showGrid;
     static int layoutcard;
-    PaginationAdapter adapterPagination;
+    PaginationSearchAdapter adapterPagination;
     ProgressBar progressBar;
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
@@ -55,8 +56,6 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         super.onCreate(savedInstanceState);
         setTitle(R.string.Search);
         getLayoutInflater().inflate(R.layout.activity_search_, frameLayout);
-
-
         searchView = (SearchView) findViewById(R.id.searchview);
         btnsearch = (Button) findViewById(R.id.btnsearch);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -68,9 +67,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
                 callSearch(newText);
-//              }
                 return true;
             }
 
@@ -86,8 +83,6 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
 
         mNameList = (RecyclerView) findViewById(R.id.rv_names);
         progressBar = (ProgressBar) findViewById(R.id.main_progress);
-
-
         movieService = MovieApi.getClient().create(MovieService.class);    //1
     }
 
@@ -141,7 +136,7 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mNameList.setLayoutManager(layoutManager);
 
-        adapterPagination = new PaginationAdapter(Search_Activity.this, this, layout);
+        adapterPagination = new PaginationSearchAdapter(Search_Activity.this, this, layout);
         mNameList.setItemAnimator(new DefaultItemAnimator());
         mNameList.setAdapter(adapterPagination);
         mNameList.setHasFixedSize(true);
@@ -252,7 +247,6 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         result.setType("movie");
         args.putSerializable("result", (Serializable) result);
         intent.putExtra("BUNDLE", args);
-        //intent.putStringArrayListExtra(EXTRA_CARS,cars);
         startActivity(intent);
 
     }
@@ -272,6 +266,4 @@ public class Search_Activity extends BaseDrawerActivity implements ListItemClick
         }
 
     }
-
-
 }

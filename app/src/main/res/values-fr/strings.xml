@@ -20,7 +20,7 @@
     <string name="SearchDetails">chercher un film ou une serie</string>
     <string name="FavorisDetails">voir vos favoris</string>
     <string name="AboutDetails">découvrir  notre application </string>
-
+    <string name="search">recherche</string>
     <string name="player_error">Erreur lors de initialisation de Youtube View </string>
     <string name="seek_to">Chercher </string>
     <string name="seek_to_hint">Secondes </string>

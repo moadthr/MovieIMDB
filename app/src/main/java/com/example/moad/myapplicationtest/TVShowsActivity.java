@@ -3,23 +3,18 @@ package com.example.moad.myapplicationtest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.example.moad.myapplicationtest.model.PopularTvShows;
 import com.example.moad.myapplicationtest.model.Result;
-import com.example.moad.myapplicationtest.model.TopRatedMovies;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -32,7 +27,7 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
     public static RecyclerView mNameList;
     static int showGrid;
     static int layoutcard;
-    PaginationAdapter adapterPagination;
+    PaginationTvshowAdapter adapterPagination;
     ProgressBar progressBar;
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
@@ -42,6 +37,7 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
     private MovieService movieService;
     static String language;
     SharedPreferences sharedPreferences;
+    LinearLayoutManager layoutManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +48,7 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         layoutcard = R.layout.cell_cards;
         showGrid = 1;
         load();
-
+        layoutManager = new LinearLayoutManager(this);
         mNameList = (RecyclerView) findViewById(R.id.rv_names);
         progressBar = (ProgressBar) findViewById(R.id.main_progress);
         movieService = MovieApi.getClient().create(MovieService.class);    //1
@@ -101,13 +97,12 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
 
     public void changeAdapter(int layout) {
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mNameList.setLayoutManager(layoutManager);
         if (layout == R.layout.cell_cards_3) {
             mNameList.setLayoutManager(new GridLayoutManager(this, 3));
         }
 
-        adapterPagination = new PaginationAdapter(TVShowsActivity.this, this, layout);
+        adapterPagination = new PaginationTvshowAdapter(TVShowsActivity.this, this, layout);
         mNameList.setItemAnimator(new DefaultItemAnimator());
         mNameList.setAdapter(adapterPagination);
         mNameList.setHasFixedSize(true);
@@ -142,7 +137,6 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
             }
         });
 
-        // mocking network delay for API call
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -204,15 +198,15 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         if (id == R.id.showGrid) {
             if (showGrid % 3 == 0) {
                 layoutcard = R.layout.cell_cards;
-                changeAdapter(layoutcard);
+                changeLayout();
                 showGrid++;
             } else if (showGrid % 3 == 1) {
                 layoutcard = R.layout.cell_cards_2;
-                changeAdapter(layoutcard);
+                changeLayout();
                 showGrid++;
             } else if (showGrid % 3 == 2) {
                 layoutcard = R.layout.cell_cards_3;
-                changeAdapter(layoutcard);
+                changeLayout();
                 showGrid++;
             }
             return true;
@@ -220,6 +214,45 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         return super.onOptionsItemSelected(item);
     }
 
+    public void changeLayout(){
+
+        mNameList.setLayoutManager(layoutManager);
+        if (layoutcard == R.layout.cell_cards_3) {
+            mNameList.setLayoutManager(new GridLayoutManager(this, 3));
+        }
+
+        mNameList.setAdapter(adapterPagination);
+        mNameList.setHasFixedSize(true);
+        mNameList.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadNextPage();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return TOTAL_PAGES;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
+    }
 
     @Override
     public void onListItemClick(Result tvshow) {
@@ -230,5 +263,4 @@ public class TVShowsActivity extends BaseDrawerActivity implements ListItemClick
         intent.putExtra("BUNDLE", args);
         startActivity(intent);
     }
-
 }

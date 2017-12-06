@@ -1,16 +1,12 @@
 package com.example.moad.myapplicationtest;
 
 import android.content.Context;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
-
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +19,6 @@ public class SettingActivity extends BaseDrawerActivity {
     static boolean initialDisplay = true;
     SharedPreferences sharedPreferences;
     String language;
-
     public Context context;
 
     @Override

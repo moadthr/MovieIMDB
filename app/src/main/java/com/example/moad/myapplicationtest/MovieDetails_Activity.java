@@ -9,24 +9,19 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.moad.myapplicationtest.model.Result;
 import com.example.moad.myapplicationtest.model.Video;
 import com.example.moad.myapplicationtest.model.Videos;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,8 +71,7 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
             titleMovie.setText(result.getOriginalName());
 
         DescriptionMovie.setText(result.getOverview());
-        String test = result.getPosterPath();
-        String url = ApiKey.urlImage + "" + result.getPosterPath();
+        String url = ApiKey.urlImage + "" + result.getBackdropPath();
 
         Picasso.with(imageView.getContext()).load(url).fit().centerInside().into(imageView);
         Gson gson = new Gson();
@@ -111,9 +105,13 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
         imgshare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String shareBody = "";
                 Intent myintent = new Intent(Intent.ACTION_SEND);
                 myintent.setType("text/plain");
-                String shareBody = "you should see this " + result.getType() + " : " + result.getOriginalName() + " ;)";
+                if (result.getType().equals("movie"))
+                    shareBody = "you should see this " + result.getType() + " : " + result.getTitle() + " ;)";
+                if (result.getType().equals("tvshow"))
+                    shareBody = "you should see this " + result.getType() + " : " + result.getOriginalName() + " ;)";
                 String objet = "your objet is here";
                 myintent.putExtra(Intent.EXTRA_SUBJECT, objet);
                 myintent.putExtra(Intent.EXTRA_TEXT, shareBody);
@@ -161,8 +159,7 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
             youTubePlayer, boolean b) {
         if (!b) {
             YPlayer = youTubePlayer;
-            YPlayer.loadVideo(moviekey);
-            YPlayer.play();
+            YPlayer.cueVideo(moviekey);
         }
     }
 
@@ -171,17 +168,17 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
                                                 provider, YouTubeInitializationResult youTubeInitializationResult) {
     }
 
-    private Call<Videos> callVideoApi() {    //2
+    private Call<Videos> callVideoApi() {
         return movieService.getVideo(result.getId(), getString(R.string.my_api_key), "en-EN", 1
         );
     }
 
-    private Call<Videos> callVideoTvshowApi() {    //2
+    private Call<Videos> callVideoTvshowApi() {
         return movieService.getVideoTvshow(result.getId(), getString(R.string.my_api_key), "en-EN", 1
         );
     }
 
-    private List<Video> fetchResults(Response<Videos> response) {    //3
+    private List<Video> fetchResults(Response<Videos> response) {
         Videos videos = response.body();
         return videos.getResults();
     }
@@ -190,8 +187,6 @@ public class MovieDetails_Activity extends BaseDrawerActivity implements YouTube
         callVideoApi().enqueue(new Callback<Videos>() {
             @Override
             public void onResponse(Call<Videos> call, Response<Videos> response) {
-                // Got data. Send it to adapter
-
                 List<Video> results = fetchResults(response);
                 frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
                 if (results == null || results.size() == 0) {

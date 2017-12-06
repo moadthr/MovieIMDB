@@ -19,6 +19,7 @@
     <string name="SearchDetails">Look for a movie</string>
     <string name="FavorisDetails">check your favorites</string>
     <string name="AboutDetails">Know more about us</string>
+    <string name="search">search</string>
 
     <string-array name="languages">
         <item>English</item>
